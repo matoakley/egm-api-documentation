@@ -1,6 +1,10 @@
 # Unique header generation
 require './lib/unique_head.rb'
 
+activate :deploy do |deploy|
+  deploy.method = :git
+end
+
 # Markdown
 set :markdown_engine, :redcarpet
 set :markdown,

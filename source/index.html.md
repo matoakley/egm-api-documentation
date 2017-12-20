@@ -2,238 +2,537 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
-  - python
-  - javascript
+  - shell: curl
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
-
-includes:
-  - errors
 
 search: true
 ---
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
 
 # Authentication
 
-> To authorize, use this code:
+# Discovery
 
-```ruby
-require 'kittn'
+# Controllers
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+## Controller Status
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+curl "http://192.168.0.1/controllers"
 ```
 
 > The above command returns JSON structured like this:
 
-```json
+```shell
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "status": "scan",
+    "eprom_version": "0321",
+    "data": {
+      "special_rate": true,
+      "card_type": "magnetic",
+      "cycles": "0000",
+      "cost": "00000000",
+      "cash_credit": "00000000",
+      "card_data": "BAW02004",
+      "basket_size": "0000"
+    "controller_type": "single-ball"
+    "address": 1
   },
   {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "status": "dispensing",
+    "eprom_version": "0321",
+    "data": {},
+    "controller_type": "single-ball"
+    "address": 2
+  },
+  {
+    "status": "idle",
+    "eprom_version": "0321",
+    "data": {},
+    "controller_type": "single-ball"
+    "address": 3
+  },
+  {
+    "status": "idle",
+    "eprom_version": "0321",
+    "data": {},
+    "controller_type": "tipper"
+    "address": 4
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+Retrieve a list of all online controllers and their current status.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET /controllers`
 
-### Query Parameters
+### Controller Properties
 
-Parameter | Default | Description
+Parameter | Value | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+address | `Integer` | This indicates the address of the controller and is expected to be between `1` and `8`.
+data | `Object` | See [Controller Data](#controller-data).
+controller_type | `String` | Specifies the type of controller either `single-ball` or `tipper`.
+eprom_version | `String` | Firmware version of controller chipset.
+status | `String` | `idle` - The controller is online and awaiting user input.
+ | | `scan` - A user has scanned a card and controller is awaiting a response.
+ | | `dispensing` - TODO
+ | | `setup_mode` - TODO
+ | | `engineer_mode` - TODO
+ | | `log_updated` - TODO
+ | | `test_mode` - TODO
+ | | `out_of_order` - TODO
+ | | `change_hopper_empty` - TODO
+ | | `keypad_entry` - TODO
+ | | `ball_hopper_low` - TODO
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+### Controller Data
 
-## Get a Specific Kitten
 
-```ruby
-require 'kittn'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+## Authorise Operation
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+curl "http://192.168.0.1/controllers/1/authorise"
+  -X POST
+  -d '{}'
 ```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+Acknowledge card/keypad operation and authorise action at the controller.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`POST /controllers/<ADDRESS>/authorise`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+ADDRESS | The ADDRESS of the controller to authorise
 
-## Delete a Specific Kitten
+### POST Data
 
-```ruby
-require 'kittn'
+Parameter | Description
+--------- | -----------
+message | foo
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
 
-```python
-import kittn
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+
+## Set Offline
 
 ```shell
-curl "http://example.com/api/kittens/2"
+curl "http://192.168.0.1/controllers/1"
   -X DELETE
-  -H "Authorization: meowmeowmeow"
 ```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
 > The above command returns JSON structured like this:
 
 ```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
+"ok"
 ```
 
-This endpoint deletes a specific kitten.
+Set the controller status to "NOT IN USE", displaying a temporary message on the controller.
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`DELETE /controllers/<ADDRESS>`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to delete
+ADDRESS | The ADDRESS of the controller to set offline, accepts `all`
 
+
+
+
+## Set Online
+
+```shell
+curl "http://192.168.0.1/controllers/1"
+  -X POST
+```
+> The above command returns JSON structured like this:
+
+```json
+"ok"
+```
+
+Set the controller status to "IN USE".
+
+### HTTP Request
+
+`POST /controllers/<ADDRESS>`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ADDRESS | The ADDRESS of the controller to set online, accepts `all`
+
+
+
+
+## Read Calendar
+
+```shell
+curl "http://192.168.0.1/controllers/1/calendar"
+```
+> The above command returns JSON structured like this:
+
+```json
+{
+  "year": "17",
+  "month": "12",
+  "day_of_month": "02",
+  "hour": "12",
+  "minute": "00",
+  "second": "00",
+  "day_of_week": "02"
+}
+```
+
+Read the current date/time set on the controller's calendar.
+
+### HTTP Request
+
+`GET /controllers/<ADDRESS>/calendar`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ADDRESS | The ADDRESS of the controller to query
+
+### Day of Week
+
+Value | Day of Week
+--------- | -----------
+01 | Sunday
+02 | Monday
+03 | Tuesday
+04 | Wednesday
+05 | Thursday
+06 | Friday
+07 | Saturday
+
+
+
+## Set Calendar
+
+```shell
+curl "http://192.168.0.1/controllers/1/calendar"
+  -X POST
+  -d '{
+        "year": "17",
+        "month": "12",
+        "day_of_month": "02",
+        "hour": "12",
+        "minute": "00",
+        "second": "00",
+        "day_of_week": "02"
+      }'
+```
+> The above command returns JSON structured like this:
+
+```json
+"ok"
+```
+
+Set the date/time set on the controller's calendar.
+
+### HTTP Request
+
+`POST /controllers/<ADDRESS>/calendar`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ADDRESS | The ADDRESS of the controller to write, accepts `all`
+
+### POST Data
+
+Parameter | Description
+--------- | -----------
+year | 2 digit string format, e.g. "18" for 2018
+month | 2 digit string format, e.g. "02" for February
+day_of_month | 2 digit string format, e.g. "15"
+hour | 2 digit string format for 24 hour clock, e.g. "13"
+minute | 2 digit string format, e.g. "30"
+second | 2 digit string format, e.g. "00"
+day_of_week | 2 digit string format, see table below
+
+### Day of Week
+
+Value | Day of Week
+--------- | -----------
+"01" | Sunday
+"02" | Monday
+"03" | Tuesday
+"04" | Wednesday
+"05" | Thursday
+"06" | Friday
+"07" | Saturday
+
+
+
+## Read Rates
+
+```shell
+curl "http://192.168.0.1/controllers/1/rates"
+```
+> The above command returns JSON structured like this:
+
+```json
+{
+  "sizes_available": "04",
+  "rates": {
+    "special": {
+      "token_4": {
+        "cycles": "0000"
+      },
+      "token_3": {
+        "cycles": "0000"
+      },
+      "token_2": {
+        "cycles": "0000"
+      },
+      "token_1": {
+        "cycles": "0000"
+      },
+      "ccr": {
+        "cycles": "0000"
+      },
+      "baskets": {
+        "basket_4": {
+          "size": "0000",
+          "price": "000000"
+        },
+        "basket_3": {
+          "size": "0000",
+          "price": "000000"
+        },
+        "basket_2": {
+          "size": "0000",
+          "price": "000000"
+        },
+        "basket_1": {
+          "size": "0000",
+          "price": "000000"
+        }
+      },
+      "aux": {
+        "cycles":"0025"
+      }
+    },
+    "normal": {
+      "token_4": {
+        "cycles": "0095"
+      },
+      "token_3": {
+        "cycles": "0080"
+      },
+      "token_2": {
+        "cycles": "0050"
+      },
+      "token_1": {
+        "cycles": "0025"
+      },
+      "ccr": {
+        "cycles": "0000"
+      },
+      "baskets": {
+        "basket_4": {
+          "size": "0100",
+          "price": "000720"
+        },
+        "basket_3": {
+          "size": "0075",
+          "price": "000620"
+        },
+        "basket_2": {
+          "size": "0050",
+          "price": "000480"
+        },
+        "basket_1": {
+          "size": "0025",
+          "price": "000300"
+        }
+      },
+      "aux": {
+        "cycles": "0025"
+      }
+    }
+  }
+}
+```
+
+Read the current rates set on the controller.
+
+### HTTP Request
+
+`GET /controllers/<ADDRESS>/rates`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ADDRESS | The ADDRESS of the controller to write
+
+
+
+
+## Set Rates
+
+```shell
+curl "http://192.168.0.1/controllers/1/rates"
+  -X POST
+  -d '{}'
+```
+> The above command returns JSON structured like this:
+
+```json
+"ok"
+```
+
+Set the rates on the controller.
+
+### HTTP Request
+
+`POST /controllers/<ADDRESS>/rates`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ADDRESS | The ADDRESS of the controller to write, accepts `all`
+
+### POST Data
+
+Parameter | Description
+--------- | -----------
+message | TODO
+
+
+
+
+## Set Rate Mode
+
+```shell
+curl "http://192.168.0.1/controllers/1/rate_mode"
+  -X POST
+  -d '{}'
+```
+> The above command returns JSON structured like this:
+
+```json
+"ok"
+```
+
+Set the rate mode on the controller.
+
+### HTTP Request
+
+`POST /controllers/<ADDRESS>/rate_mode`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ADDRESS | The ADDRESS of the controller to write, accepts `all`
+
+### POST Data
+
+Parameter | Description
+--------- | -----------
+message | TODO
+
+
+
+
+## Display Message
+
+```shell
+curl "http://192.168.0.1/controllers/1/display"
+  -X POST
+  -d '{
+        "duration": "60",
+        "text": "Special rates available until 12:00"
+      }'
+```
+> The above command returns JSON structured like this:
+
+```json
+"ok"
+```
+
+Set a message to be displayed on the controller for a given period.
+
+### HTTP Request
+
+`POST /controllers/<ADDRESS>/display`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ADDRESS | The ADDRESS of the controller to write, accepts `all`
+
+### POST Data
+
+Parameter | Description
+--------- | -----------
+duration | Number of minutes to display message in 2 digit string format, e.g. "30"
+text | ASCII message to be displayed, use `\n` for new line
+
+
+
+
+## Read Activity Logs
+
+```shell
+curl "http://192.168.0.1/controllers/1/activity?day_of_month=04&month=11&year=17&hour=12"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+TODO
+```
+
+Read activity logs from controller for a given hour.
+
+### HTTP Request
+
+`GET /controllers/<ADDRESS>/activity`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ADDRESS | The ADDRESS of the controller to read
+
+### GET Parameters
+
+Parameter | Description
+--------- | -----------
+day_of_month | TODO
+month | TODO
+year | TODO
+hour | TODO
