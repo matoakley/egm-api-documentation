@@ -1,8 +1,8 @@
 # Unique header generation
 require './lib/unique_head.rb'
 
-activate :deploy do |deploy|
-  deploy.method = :git
+activate :gh_pages do |gh_pages|
+  gh_pages.remote = 'git@github.com:startupheroesuk/egm-api-documentation.git'
 end
 
 # Markdown

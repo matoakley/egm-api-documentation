@@ -1,66 +1,92 @@
 ---
-title: API Reference
+title: EGM Netbox API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell: curl
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
+  - <a href='mailto:info@rangeball.co.uk'>Support</a>
+  - <a href='https://www.startupheroes.co.uk/services/embedded-software-development/'>Embedded Development by Startup Heroes</a>
 
 search: true
 ---
 
 # Introduction
 
+This documentation details and describes how a third party can integrate with the EGM Netbox device, and subsequently control up to 8 EGM golf ball dispensing machines.
 
-# Authentication
+The Netbox operates a RESTful API for communication over HTTP.
 
-# Discovery
+The Netbox is a physical device that is connected by serial port to EGM dispensers, and secondly, to a hard-wired LAN connection (Ethernet). The device automatically detects on-line ball dispensers, polling them for their status, and makes this information available via it’s HTTP-driven interface on the LAN connection.
 
-# Controllers
+It is the responsibility of the third party (software provider) to check the status of the EGM ball dispensers by using the endpoints below; in particular, [Controller Status](#controller-status) and [Authorise Operation](#authorise-operation).
+
+The status of dispensers will usually be `idle`, indicating that the machine is online and awaiting input. When this status changes to `scan`, for example, then the third party will be required to process the received card data, and take decisive action by sending an [authorise](#authorise-operation) message for the transaction.
+
+To summarize: EGM Netbox will take care of polling ball dispensers, and display any received information, as indicated by this documentation. The third party wishing to integrate shall view this data, extract any relevant parts, and control the ball dispenser by sending appropriate messages to the Netbox.
+
+Further help can be obtained by [contacting EGM](mailto:info@rangeball.co.uk).
+
+
+# HOSTNAME Discovery
+
+# API Versioning
+
+This documentation represents `v1.0.0` of the API. By specifying `/api/v1` as part of your URL, you will ensure that your integration continues to function regardless of any future upgrades to the interface.
+
+Your URL should be constructed as follows: `http://<HOSTNAME>/api/v1/<ENDPOINT>`.
+
+See [HOSTNAME Discovery](#hostname-discovery) and [Endpoints](#endpoints) for further information.
+
+# Addressing Controllers
+
+When building endpoint URLs you will notice a variable `<ADDRESS>` being used. This represents the numerical address of the controller with which you wish to communicate.
+
+The address is a value between `1` and `8`. In some cases you can specify `all` to broadcast to every controller, this option is highlighted when available.
+
+# Endpoints
 
 ## Controller Status
 
 ```shell
-curl "http://192.168.0.1/controllers"
+curl "http://192.168.0.1/api/v1/controllers"
 ```
 
 > The above command returns JSON structured like this:
 
-```shell
+```json
 [
   {
     "status": "scan",
-    "eprom_version": "0321",
+    "eprom_version": "03.21",
     "data": {
       "special_rate": true,
       "card_type": "magnetic",
-      "cycles": "0000",
-      "cost": "00000000",
-      "cash_credit": "00000000",
+      "cycles": 75,
+      "cost": 480,
+      "cash_credit": 0,
       "card_data": "BAW02004",
-      "basket_size": "0000"
+      "basket_size": 3
     "controller_type": "single-ball"
     "address": 1
   },
   {
     "status": "dispensing",
-    "eprom_version": "0321",
+    "eprom_version": "03.21",
     "data": {},
     "controller_type": "single-ball"
     "address": 2
   },
   {
     "status": "idle",
-    "eprom_version": "0321",
+    "eprom_version": "03.21",
     "data": {},
     "controller_type": "single-ball"
     "address": 3
   },
   {
     "status": "idle",
-    "eprom_version": "0321",
+    "eprom_version": "03.21",
     "data": {},
     "controller_type": "tipper"
     "address": 4
@@ -76,68 +102,99 @@ Retrieve a list of all online controllers and their current status.
 
 ### Controller Properties
 
-Parameter | Value | Description
---------- | ------- | -----------
+Parameter | Type | Description
+--------- | ----- | -----------
 address | `Integer` | This indicates the address of the controller and is expected to be between `1` and `8`.
-data | `Object` | See [Controller Data](#controller-data).
+data | `Object` | Populated during `scan`, see [Controller Data](#controller-data).
 controller_type | `String` | Specifies the type of controller either `single-ball` or `tipper`.
 eprom_version | `String` | Firmware version of controller chipset.
 status | `String` | `idle` - The controller is online and awaiting user input.
  | | `scan` - A user has scanned a card and controller is awaiting a response.
- | | `dispensing` - TODO
- | | `setup_mode` - TODO
- | | `engineer_mode` - TODO
- | | `log_updated` - TODO
- | | `test_mode` - TODO
- | | `out_of_order` - TODO
- | | `change_hopper_empty` - TODO
+ | | `dispensing` -Controller is currently dispensing balls.
+ | | `setup_mode` - Controller is in SETUP mode.
+ | | `engineer_mode` - Controller is in ENGINEER mode.
+ | | `log_updated` - Activity logs have been updated since last read.
+ | | `test_mode` - Controller is in TEST mode.
+ | | `out_of_order` - Error present on controller.
+ | | `change_hopper_empty` - Controller's change hopper is empty.
  | | `keypad_entry` - TODO
- | | `ball_hopper_low` - TODO
+ | | `ball_hopper_low` - Controller's ball hopper is low.
 
 ### Controller Data
+
+Parameter | Type | Description
+----------|-------|------------
+special_rate | `Boolean` | Whether special rate is selected at controller.
+card_type | `String` | The type of card that has been read, either `magnetic` or `barcode`.
+cycles | `String` | Delivery cycles for selected size.
+cost | `String` | Cost of selected size.
+cash_credit | `String` | Amount of cash credit at controller.
+card_data | `String` | Data read from card scan, this represents the card identifier.
+basket_size | `String` | Selected basket size at controller.
 
 
 
 
 ## Authorise Operation
 
+> To dispense balls and display details of the transaction on controller:
+
 ```shell
-curl "http://192.168.0.1/controllers/1/authorise"
+curl "http://192.168.0.1/api/v1/controllers/1/authorise"
   -X POST
-  -d '{}'
+  -d '{
+        "cycles": 50,
+        "name": "Joe Bloggs",
+        "cost": "3.50",
+        "balance:: "16.50"
+      }'
+```
+
+> To tell user they need to top up with custom message:
+
+```shell
+curl "http://192.168.0.1/api/v1/controllers/1/authorise"
+  -X POST
+  -d '{
+        "cycles": 0,
+        "message": "There is not enough credit available\nPlease top up!"
+      }'
 ```
 > The above command returns JSON structured like this:
 
 ```json
-{
-}
+"ok"
 ```
 
-Acknowledge card/keypad operation and authorise action at the controller.
+Acknowledge card/voucher operation and authorise action at the controller.
+
+<aside class="warning">If an authrorise response is not received within 60 seconds of a card read, the controller will assume the server is offline and return to Home Screen.</aside>
 
 ### HTTP Request
 
 `POST /controllers/<ADDRESS>/authorise`
 
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to authorise
 
 ### POST Data
 
-Parameter | Description
---------- | -----------
-message | foo
+Parameter | Type | Description
+--------- | ---- | -----------
+cycles | `Integer` | Number of delivery cycles. Send `0` if no balls should be dispensed.
+transfer_credit | `Boolean` | (Optional) Set `true` to deduct cash top-up value from cash-credit store.
+log_voucher | `Boolean` | (Optional) Set `true` to log delivery as voucher.
+message | `String` | (Optional) ASCII message to display at controller, use `\n` for new line.
+name | `String` | (Optional) The name of the card owner.
+cost | `String` | (Optional) Cost of the transaction.
+balance | `String` | (Optional) Remaining balance on card owner's account.
 
+<aside class="notice">You are expected to pass <strong>either</strong> a <code>message</code> to display at the machine <strong>or alternatively</strong> each of <code>name</code>, <code>cost</code> & <code>balance</code> and a default message will be displayed.</aside>
 
 
 
 ## Set Offline
 
 ```shell
-curl "http://192.168.0.1/controllers/1"
+curl "http://192.168.0.1/api/v1/controllers/1"
   -X DELETE
 ```
 > The above command returns JSON structured like this:
@@ -152,11 +209,7 @@ Set the controller status to "NOT IN USE", displaying a temporary message on the
 
 `DELETE /controllers/<ADDRESS>`
 
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to set offline, accepts `all`
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
 
 
 
@@ -164,7 +217,7 @@ ADDRESS | The ADDRESS of the controller to set offline, accepts `all`
 ## Set Online
 
 ```shell
-curl "http://192.168.0.1/controllers/1"
+curl "http://192.168.0.1/api/v1/controllers/1"
   -X POST
 ```
 > The above command returns JSON structured like this:
@@ -179,11 +232,7 @@ Set the controller status to "IN USE".
 
 `POST /controllers/<ADDRESS>`
 
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to set online, accepts `all`
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
 
 
 
@@ -191,7 +240,7 @@ ADDRESS | The ADDRESS of the controller to set online, accepts `all`
 ## Read Calendar
 
 ```shell
-curl "http://192.168.0.1/controllers/1/calendar"
+curl "http://192.168.0.1/api/v1/controllers/1/calendar"
 ```
 > The above command returns JSON structured like this:
 
@@ -213,30 +262,24 @@ Read the current date/time set on the controller's calendar.
 
 `GET /controllers/<ADDRESS>/calendar`
 
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to query
-
 ### Day of Week
 
 Value | Day of Week
 --------- | -----------
-01 | Sunday
-02 | Monday
-03 | Tuesday
-04 | Wednesday
-05 | Thursday
-06 | Friday
-07 | Saturday
+`01` | Sunday
+`02` | Monday
+`03` | Tuesday
+`04` | Wednesday
+`05` | Thursday
+`06` | Friday
+`07` | Saturday
 
 
 
 ## Set Calendar
 
 ```shell
-curl "http://192.168.0.1/controllers/1/calendar"
+curl "http://192.168.0.1/api/v1/controllers/1/calendar"
   -X POST
   -d '{
         "year": "17",
@@ -260,123 +303,115 @@ Set the date/time set on the controller's calendar.
 
 `POST /controllers/<ADDRESS>/calendar`
 
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to write, accepts `all`
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
 
 ### POST Data
 
-Parameter | Description
---------- | -----------
-year | 2 digit string format, e.g. "18" for 2018
-month | 2 digit string format, e.g. "02" for February
-day_of_month | 2 digit string format, e.g. "15"
-hour | 2 digit string format for 24 hour clock, e.g. "13"
-minute | 2 digit string format, e.g. "30"
-second | 2 digit string format, e.g. "00"
-day_of_week | 2 digit string format, see table below
+Parameter | Type | Description
+--------- | ---- | -----------
+year | `String` | 2 character format, e.g. `18` for 2018
+month | `String` | 2 character format, e.g. `02` for February
+day_of_month | `String` | 2 character format, e.g. `15`
+hour | `String` | 2 character format for 24 hour clock, e.g. `13`
+minute | `String` | 2 character format, e.g. `30`
+second | `String` | 2 character format, e.g. `00`
+day_of_week | `String` | `01` - Sunday
+ | | `02` - Monday
+ | | `03` - Tuesday
+ | | `04` - Wednesday
+ | | `05` - Thursday
+ | | `06` - Friday
+ | | `07` - Saturday
 
-### Day of Week
-
-Value | Day of Week
---------- | -----------
-"01" | Sunday
-"02" | Monday
-"03" | Tuesday
-"04" | Wednesday
-"05" | Thursday
-"06" | Friday
-"07" | Saturday
+<aside class="notice">Note that after setting the calendar, the controller will temporarily go offline to recalibrate its logs.</aside>
 
 
 
 ## Read Rates
 
 ```shell
-curl "http://192.168.0.1/controllers/1/rates"
+curl "http://192.168.0.1/api/v1/controllers/1/rates"
 ```
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "sizes_available": "04",
+  "sizes_available": 4,
   "rates": {
     "special": {
-      "token_4": {
-        "cycles": "0000"
-      },
-      "token_3": {
-        "cycles": "0000"
+      "token_1": {
+        "cycles": 50
       },
       "token_2": {
-        "cycles": "0000"
+        "cycles": 100
       },
-      "token_1": {
-        "cycles": "0000"
+      "token_3": {
+        "cycles": 150
+      },
+      "token_4": {
+        "cycles": 200
       },
       "ccr": {
-        "cycles": "0000"
+        "cycles": 20
       },
       "baskets": {
-        "basket_4": {
-          "size": "0000",
-          "price": "000000"
+        "basket_1": {
+          "cycles": 25,
+          "price": 150
+        }
+        "basket_2": {
+          "cycles": 50,
+          "price": 240
         },
         "basket_3": {
-          "size": "0000",
-          "price": "000000"
+          "cycles": 75,
+          "price": 310
         },
-        "basket_2": {
-          "size": "0000",
-          "price": "000000"
+        "basket_4": {
+          "cycles": 100,
+          "price": 360
         },
-        "basket_1": {
-          "size": "0000",
-          "price": "000000"
-        }
       },
       "aux": {
-        "cycles":"0025"
+        "cycles": 50
       }
     },
     "normal": {
-      "token_4": {
-        "cycles": "0095"
-      },
-      "token_3": {
-        "cycles": "0080"
+      "token_1": {
+        "cycles": 25
       },
       "token_2": {
-        "cycles": "0050"
+        "cycles": 50
       },
-      "token_1": {
-        "cycles": "0025"
+      "token_3": {
+        "cycles": 75
+      },
+      "token_4": {
+        "cycles": 100
       },
       "ccr": {
-        "cycles": "0000"
+        "cycles": 10
       },
       "baskets": {
-        "basket_4": {
-          "size": "0100",
-          "price": "000720"
+        "basket_1": {
+          "cycles": 25,
+          "price": 300
+        }
+        "basket_2": {
+          "cycles": 50,
+          "price": 480
         },
         "basket_3": {
-          "size": "0075",
-          "price": "000620"
+          "cycles": 75,
+          "price": 620
         },
-        "basket_2": {
-          "size": "0050",
-          "price": "000480"
+        "basket_4": {
+          "cycles": 100,
+          "price": 720
         },
-        "basket_1": {
-          "size": "0025",
-          "price": "000300"
-        }
       },
       "aux": {
-        "cycles": "0025"
+        "cycles": 25
       }
     }
   }
@@ -389,21 +424,101 @@ Read the current rates set on the controller.
 
 `GET /controllers/<ADDRESS>/rates`
 
-### URL Parameters
+### Response Data
 
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to write
-
-
+Parameter | Type | Description
+--------- | ---- | -----------
+sizes_available | `Integer` | Number of basket sizes available on controller.
+cycles | `Integer` | Size of currently described rate.
+price | `Integer` | Price in pence of currently described rate.
 
 
 ## Set Rates
 
 ```shell
-curl "http://192.168.0.1/controllers/1/rates"
+curl "http://192.168.0.1/api/v1/controllers/1/rates"
   -X POST
-  -d '{}'
+  -d '{
+      "sizes_available": 4,
+      "rates": {
+        "special": {
+          "token_1": {
+            "cycles": 50
+          },
+          "token_2": {
+            "cycles": 100
+          },
+          "token_3": {
+            "cycles": 150
+          },
+          "token_4": {
+            "cycles": 200
+          },
+          "ccr": {
+            "cycles": 20
+          },
+          "baskets": {
+            "basket_1": {
+              "cycles": 25,
+              "price": 150
+            }
+            "basket_2": {
+              "cycles": 50,
+              "price": 240
+            },
+            "basket_3": {
+              "cycles": 75,
+              "price": 310
+            },
+            "basket_4": {
+              "cycles": 100,
+              "price": 360
+            },
+          },
+          "aux": {
+            "cycles": 50
+          }
+        },
+        "normal": {
+          "token_1": {
+            "cycles": 25
+          },
+          "token_2": {
+            "cycles": 50
+          },
+          "token_3": {
+            "cycles": 75
+          },
+          "token_4": {
+            "cycles": 100
+          },
+          "ccr": {
+            "cycles": 10
+          },
+          "baskets": {
+            "basket_1": {
+              "cycles": 25,
+              "price": 300
+            }
+            "basket_2": {
+              "cycles": 50,
+              "price": 480
+            },
+            "basket_3": {
+              "cycles": 75,
+              "price": 620
+            },
+            "basket_4": {
+              "cycles": 100,
+              "price": 720
+            },
+          },
+          "aux": {
+            "cycles": 25
+          }
+        }
+      }
+    }'
 ```
 > The above command returns JSON structured like this:
 
@@ -417,17 +532,15 @@ Set the rates on the controller.
 
 `POST /controllers/<ADDRESS>/rates`
 
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to write, accepts `all`
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
 
 ### POST Data
 
-Parameter | Description
---------- | -----------
-message | TODO
+Parameter | Type | Description
+--------- | ---- | -----------
+sizes_available | `Integer` | Number of basket sizes available on controller.
+cycles | `Integer` | Size of currently described rate.
+price | `Integer` | Price in pence of currently described rate.
 
 
 
@@ -435,9 +548,39 @@ message | TODO
 ## Set Rate Mode
 
 ```shell
-curl "http://192.168.0.1/controllers/1/rate_mode"
+curl "http://192.168.0.1/api/v1/controllers/1/rate-mode"
   -X POST
-  -d '{}'
+  -d '{
+        "mode": "schedule",
+        "sunday": {
+          start: "1000",
+          end: "1400"
+        },
+        "monday": {
+          start: "1200",
+          end: "1400"
+        },
+        "tuesday": {
+          start: "1200",
+          end: "1400"
+        },
+        "wednesday": {
+          start: "1200",
+          end: "1400"
+        },
+        "thursday": {
+          start: "1200",
+          end: "1400"
+        },
+        "friday": {
+          start: "1200",
+          end: "1400"
+        },
+        "saturday": {
+          start: "1200",
+          end: "1400"
+        }
+      }'
 ```
 > The above command returns JSON structured like this:
 
@@ -449,30 +592,30 @@ Set the rate mode on the controller.
 
 ### HTTP Request
 
-`POST /controllers/<ADDRESS>/rate_mode`
+`POST /controllers/<ADDRESS>/rate-mode`
 
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to write, accepts `all`
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
 
 ### POST Data
 
-Parameter | Description
---------- | -----------
-message | TODO
+Parameter | Type | Description
+--------- | ---- | -----------
+mode | `String` | `schedule` - Set rate mode automatically according to schedule.
+ | | `manual` - Override schedule and enable special rate mode.
+start | `String` | Time to start special rate mode in 24-hour format.
+end | `String` | Time to end special rate mode in 24-hour format.
 
+<aside class="warning">Start and end times for each day must always be specified regardless of <code>mode</code>.</aside>
 
 
 
 ## Display Message
 
 ```shell
-curl "http://192.168.0.1/controllers/1/display"
+curl "http://192.168.0.1/api/v1/controllers/1/display"
   -X POST
   -d '{
-        "duration": "60",
+        "duration": 60,
         "text": "Special rates available until 12:00"
       }'
 ```
@@ -488,18 +631,16 @@ Set a message to be displayed on the controller for a given period.
 
 `POST /controllers/<ADDRESS>/display`
 
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to write, accepts `all`
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
 
 ### POST Data
 
-Parameter | Description
---------- | -----------
-duration | Number of minutes to display message in 2 digit string format, e.g. "30"
-text | ASCII message to be displayed, use `\n` for new line
+Parameter | Type | Description
+--------- | ---- | -----------
+duration | `Integer` | Number of minutes to display message, must be between `1` and `60`
+ | | Set to `99` to display message indefinitely.
+ | | Set to `0` to clear previously set message.
+text | `String` | ASCII message to be displayed, use `\n` for new line
 
 
 
@@ -507,13 +648,53 @@ text | ASCII message to be displayed, use `\n` for new line
 ## Read Activity Logs
 
 ```shell
-curl "http://192.168.0.1/controllers/1/activity?day_of_month=04&month=11&year=17&hour=12"
+curl "http://192.168.0.1/api/v1/controllers/1/activity?day_of_month=4&month=11&year=17&hour=12"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-TODO
+{
+  "day": 20,
+  "month": 12,
+  "year": 17,
+  "hour": 12,
+  "top_up_cash": 0,
+  "token_1_collected": 1,
+  "token_2_collected": 0,
+  "token_3_collected": 0,
+  "token_4_collected": 0,
+  "test_mode_cycles": 0,
+  "test_mode_change": 0,
+  "test_mode_cash": 0,
+  "slave_mode_cycles": 0,
+  "keypad_cycles": 0,
+  "change_given": 0,
+  "ccr_2_operations": 1,
+  "cash_collected": 1650,
+  "card_cycles": 0,
+  "basket_1": {
+    "dispensed": 1,
+    "cycles": 25,
+    "cash": 100
+  },
+  "basket_2": {
+    "dispensed": 1,
+    "cycles": 50,
+    "cash": 200
+  },
+  "basket_3": {
+    "dispensed": 1,
+    "cycles": 75,
+    "cash": 300
+  },
+  "basket_4": {
+    "dispensed": 1,
+    "cycles": 100,
+    "cash": 600
+  },
+  "aux_operations": 1
+}
 ```
 
 Read activity logs from controller for a given hour.
@@ -522,17 +703,11 @@ Read activity logs from controller for a given hour.
 
 `GET /controllers/<ADDRESS>/activity`
 
-### URL Parameters
+### QUERY Parameters
 
-Parameter | Description
---------- | -----------
-ADDRESS | The ADDRESS of the controller to read
-
-### GET Parameters
-
-Parameter | Description
---------- | -----------
-day_of_month | TODO
-month | TODO
-year | TODO
-hour | TODO
+Parameter | Type | Description
+--------- | ---- | -----------
+day | `Integer` | Defaults to current day.
+month | `Integer` | Defaults to current month.
+year | `Integer` | Defaults to current year.
+hour | `Integer` | 24-hour format, defaults to current hour.
