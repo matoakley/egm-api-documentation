@@ -49,7 +49,7 @@ The address is a value between `1` and `8`. In some cases you can specify `all` 
 ## Controller Status
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers"
+curl "http://192.168.0.1:8080/api/v1/controllers"
 ```
 
 > The above command returns JSON structured like this:
@@ -140,24 +140,34 @@ basket_size | `String` | Selected basket size at controller.
 > To dispense balls and display details of the transaction on controller:
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/authorise"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/authorise"
   -X POST
+  -H "Content-Type: application/json"
   -d '{
-        "cycles": 50,
-        "name": "Joe Bloggs",
-        "cost": "3.50",
-        "balance:: "16.50"
+        "authorise": {
+          "cycles": 50,
+          "name": "Joe Bloggs",
+          "cost": "3.50",
+          "balance: "16.50",
+          "transfer_credit": 0,
+          "log_voucher": 0
+        }
       }'
 ```
 
 > To tell user they need to top up with custom message:
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/authorise"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/authorise"
   -X POST
+  -H "Content-Type: application/json"
   -d '{
-        "cycles": 0,
-        "message": "There is not enough credit available\nPlease top up!"
+        "authorise": {
+          "cycles": 0,
+          "message": "There is not enough credit available\nPlease top up!",
+          "transfer_credit": 0,
+          "log_voucher": 0
+        }
       }'
 ```
 > The above command returns JSON structured like this:
@@ -180,8 +190,8 @@ Acknowledge card/voucher operation and authorise action at the controller.
 Parameter | Type | Description
 --------- | ---- | -----------
 cycles | `Integer` | Number of delivery cycles. Send `0` if no balls should be dispensed.
-transfer_credit | `Boolean` | (Optional) Set `true` to deduct cash top-up value from cash-credit store.
-log_voucher | `Boolean` | (Optional) Set `true` to log delivery as voucher.
+transfer_credit | `Boolean` | Set `true` to deduct cash top-up value from cash-credit store.
+log_voucher | `Boolean` | Set `true` to log delivery as voucher.
 message | `String` | (Optional) ASCII message to display at controller, use `\n` for new line.
 name | `String` | (Optional) The name of the card owner.
 cost | `String` | (Optional) Cost of the transaction.
@@ -194,7 +204,7 @@ balance | `String` | (Optional) Remaining balance on card owner's account.
 ## Set Offline
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1"
+curl "http://192.168.0.1:8080/api/v1/controllers/1"
   -X DELETE
 ```
 > The above command returns JSON structured like this:
@@ -217,8 +227,9 @@ Set the controller status to "NOT IN USE", displaying a temporary message on the
 ## Set Online
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1"
+curl "http://192.168.0.1:8080/api/v1/controllers/1"
   -X POST
+  -H "Content-Type: application/json"
 ```
 > The above command returns JSON structured like this:
 
@@ -240,7 +251,8 @@ Set the controller status to "IN USE".
 ## Read Calendar
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/calendar"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/calendar"
+  -H "Content-Type: application/json"
 ```
 > The above command returns JSON structured like this:
 
@@ -279,16 +291,19 @@ Value | Day of Week
 ## Set Calendar
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/calendar"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/calendar"
   -X POST
+  -H "Content-Type: application/json"
   -d '{
-        "year": "17",
-        "month": "12",
-        "day_of_month": "02",
-        "hour": "12",
-        "minute": "00",
-        "second": "00",
-        "day_of_week": "02"
+        "calendar": {
+          "year": "17",
+          "month": "12",
+          "day_of_month": "02",
+          "hour": "12",
+          "minute": "00",
+          "second": "00",
+          "day_of_week": "02"
+        }
       }'
 ```
 > The above command returns JSON structured like this:
@@ -330,7 +345,8 @@ day_of_week | `String` | `01` - Sunday
 ## Read Rates
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/rates"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/rates"
+  -H "Content-Type: application/json"
 ```
 > The above command returns JSON structured like this:
 
@@ -436,89 +452,92 @@ price | `Integer` | Price in pence of currently described rate.
 ## Set Rates
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/rates"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/rates"
   -X POST
+  -H "Content-Type: application/json"
   -d '{
-      "sizes_available": 4,
-      "rates": {
-        "special": {
-          "token_1": {
-            "cycles": 50
-          },
-          "token_2": {
-            "cycles": 100
-          },
-          "token_3": {
-            "cycles": 150
-          },
-          "token_4": {
-            "cycles": 200
-          },
-          "ccr": {
-            "cycles": 20
-          },
-          "baskets": {
-            "basket_1": {
-              "cycles": 25,
-              "price": 150
+        "rates": {
+          "sizes_available": 4,
+          "rates": {
+            "special": {
+              "token_1": {
+                "cycles": 50
+              },
+              "token_2": {
+                "cycles": 100
+              },
+              "token_3": {
+                "cycles": 150
+              },
+              "token_4": {
+                "cycles": 200
+              },
+              "ccr": {
+                "cycles": 20
+              },
+              "baskets": {
+                "basket_1": {
+                  "cycles": 25,
+                  "price": 150
+                }
+                "basket_2": {
+                  "cycles": 50,
+                  "price": 240
+                },
+                "basket_3": {
+                  "cycles": 75,
+                  "price": 310
+                },
+                "basket_4": {
+                  "cycles": 100,
+                  "price": 360
+                },
+              },
+              "aux": {
+                "cycles": 50
+              }
+            },
+            "normal": {
+              "token_1": {
+                "cycles": 25
+              },
+              "token_2": {
+                "cycles": 50
+              },
+              "token_3": {
+                "cycles": 75
+              },
+              "token_4": {
+                "cycles": 100
+              },
+              "ccr": {
+                "cycles": 10
+              },
+              "baskets": {
+                "basket_1": {
+                  "cycles": 25,
+                  "price": 300
+                }
+                "basket_2": {
+                  "cycles": 50,
+                  "price": 480
+                },
+                "basket_3": {
+                  "cycles": 75,
+                  "price": 620
+                },
+                "basket_4": {
+                  "cycles": 100,
+                  "price": 720
+                },
+              },
+              "aux": {
+                "cycles": 25
+              }
             }
-            "basket_2": {
-              "cycles": 50,
-              "price": 240
-            },
-            "basket_3": {
-              "cycles": 75,
-              "price": 310
-            },
-            "basket_4": {
-              "cycles": 100,
-              "price": 360
-            },
-          },
-          "aux": {
-            "cycles": 50
-          }
-        },
-        "normal": {
-          "token_1": {
-            "cycles": 25
-          },
-          "token_2": {
-            "cycles": 50
-          },
-          "token_3": {
-            "cycles": 75
-          },
-          "token_4": {
-            "cycles": 100
-          },
-          "ccr": {
-            "cycles": 10
-          },
-          "baskets": {
-            "basket_1": {
-              "cycles": 25,
-              "price": 300
-            }
-            "basket_2": {
-              "cycles": 50,
-              "price": 480
-            },
-            "basket_3": {
-              "cycles": 75,
-              "price": 620
-            },
-            "basket_4": {
-              "cycles": 100,
-              "price": 720
-            },
-          },
-          "aux": {
-            "cycles": 25
           }
         }
-      }
-    }'
+      }'
 ```
 > The above command returns JSON structured like this:
 
@@ -548,37 +567,40 @@ price | `Integer` | Price in pence of currently described rate.
 ## Set Rate Mode
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/rate-mode"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/rate-mode"
   -X POST
+  -H "Content-Type: application/json"
   -d '{
-        "mode": "schedule",
-        "sunday": {
-          start: "1000",
-          end: "1400"
-        },
-        "monday": {
-          start: "1200",
-          end: "1400"
-        },
-        "tuesday": {
-          start: "1200",
-          end: "1400"
-        },
-        "wednesday": {
-          start: "1200",
-          end: "1400"
-        },
-        "thursday": {
-          start: "1200",
-          end: "1400"
-        },
-        "friday": {
-          start: "1200",
-          end: "1400"
-        },
-        "saturday": {
-          start: "1200",
-          end: "1400"
+        "rate_mode": {
+          "mode": "schedule",
+          "sunday": {
+            start: "1000",
+            end: "1400"
+          },
+          "monday": {
+            start: "1200",
+            end: "1400"
+          },
+          "tuesday": {
+            start: "1200",
+            end: "1400"
+          },
+          "wednesday": {
+            start: "1200",
+            end: "1400"
+          },
+          "thursday": {
+            start: "1200",
+            end: "1400"
+          },
+          "friday": {
+            start: "1200",
+            end: "1400"
+          },
+          "saturday": {
+            start: "1200",
+            end: "1400"
+          }
         }
       }'
 ```
@@ -612,11 +634,14 @@ end | `String` | Time to end special rate mode in 24-hour format.
 ## Display Message
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/display"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/display"
   -X POST
+  -H "Content-Type: application/json"
   -d '{
-        "duration": 60,
-        "text": "Special rates available until 12:00"
+        "display": {
+          "duration": 60,
+          "text": "Special rates available until 12:00"
+        }
       }'
 ```
 > The above command returns JSON structured like this:
@@ -648,7 +673,8 @@ text | `String` | ASCII message to be displayed, use `\n` for new line
 ## Read Activity Logs
 
 ```shell
-curl "http://192.168.0.1/api/v1/controllers/1/activity?day_of_month=4&month=11&year=17&hour=12"
+curl "http://192.168.0.1:8080/api/v1/controllers/1/activity?day_of_month=4&month=11&year=17&hour=12"
+  -H "Content-Type: application/json"
 ```
 
 > The above command returns JSON structured like this:
