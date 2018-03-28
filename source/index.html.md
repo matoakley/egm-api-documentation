@@ -30,6 +30,16 @@ Further help can be obtained by [contacting EGM](mailto:info@rangeball.co.uk).
 
 # HOSTNAME Discovery
 
+On most local networks, the Netbox device is discoverable by its hostname `netbox.local`.
+
+If you are using a network that does not support DNS then you may opt to discover the device via UDP. The UDP service runs constantly on the device and can be contacted at any time.
+
+To request the IP address of the Netbox via UDP, you should send a UDP broadcast on `port 4040`. The packet data should contain a single string `EGM_NETBOX_DISCOVERY`.
+
+Upon sending the broadcast, you should listen for a response from the Netbox which will contain the IP address of the device.
+
+There are a number of popular libraries for most frameworks that may assist in sending and receiving UDP packets.
+
 # API Versioning
 
 This documentation represents `v1.0.0` of the API. By specifying `/api/v1` as part of your URL, you will ensure that your integration continues to function regardless of any future upgrades to the interface.
@@ -40,7 +50,9 @@ See [HOSTNAME Discovery](#hostname-discovery) and [Endpoints](#endpoints) for fu
 
 # Addressing Controllers
 
-When building endpoint URLs you will notice a variable `<ADDRESS>` being used. This represents the numerical address of the controller with which you wish to communicate.
+When building endpoint URLs you will notice a variable `<ADDRESS>` being used. This represents the hostname of IP address of the controller with which you wish to communicate.
+
+Please note that you must include the port number of the Netbox service within the URL of your requests. For most devices the default port will be `8080`.
 
 The address is a value between `1` and `8`. In some cases you can specify `all` to broadcast to every controller, this option is highlighted when available.
 
