@@ -1,0 +1,1214 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>EGM Netbox API Reference</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .cd {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[&quot;shell&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <img src="images/logo.png" class="logo" alt="Logo" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="shell">curl</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc" class="toc-list-h1">
+          <li>
+            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#hostname-discovery" class="toc-h1 toc-link" data-title="HOSTNAME Discovery">HOSTNAME Discovery</a>
+          </li>
+          <li>
+            <a href="#api-versioning" class="toc-h1 toc-link" data-title="API Versioning">API Versioning</a>
+          </li>
+          <li>
+            <a href="#addressing-controllers" class="toc-h1 toc-link" data-title="Addressing Controllers">Addressing Controllers</a>
+          </li>
+          <li>
+            <a href="#endpoints" class="toc-h1 toc-link" data-title="Endpoints">Endpoints</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#controller-status" class="toc-h2 toc-link" data-title="Controller Status">Controller Status</a>
+                  </li>
+                  <li>
+                    <a href="#authorise-operation" class="toc-h2 toc-link" data-title="Authorise Operation">Authorise Operation</a>
+                  </li>
+                  <li>
+                    <a href="#set-offline" class="toc-h2 toc-link" data-title="Set Offline">Set Offline</a>
+                  </li>
+                  <li>
+                    <a href="#set-online" class="toc-h2 toc-link" data-title="Set Online">Set Online</a>
+                  </li>
+                  <li>
+                    <a href="#read-calendar" class="toc-h2 toc-link" data-title="Read Calendar">Read Calendar</a>
+                  </li>
+                  <li>
+                    <a href="#set-calendar" class="toc-h2 toc-link" data-title="Set Calendar">Set Calendar</a>
+                  </li>
+                  <li>
+                    <a href="#read-rates" class="toc-h2 toc-link" data-title="Read Rates">Read Rates</a>
+                  </li>
+                  <li>
+                    <a href="#set-rates" class="toc-h2 toc-link" data-title="Set Rates">Set Rates</a>
+                  </li>
+                  <li>
+                    <a href="#set-rate-mode" class="toc-h2 toc-link" data-title="Set Rate Mode">Set Rate Mode</a>
+                  </li>
+                  <li>
+                    <a href="#display-message" class="toc-h2 toc-link" data-title="Display Message">Display Message</a>
+                  </li>
+                  <li>
+                    <a href="#read-activity-logs" class="toc-h2 toc-link" data-title="Read Activity Logs">Read Activity Logs</a>
+                  </li>
+              </ul>
+          </li>
+      </div>
+        <ul class="toc-footer">
+            <li><a href='mailto:info@rangeball.co.uk'>Support</a></li>
+            <li><a href='https://www.startupheroes.co.uk/services/embedded-software-development/'>Embedded Development by Startup Heroes</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id='introduction'>Introduction</h1>
+<p>This documentation details and describes how a third party can integrate with the EGM Netbox device, and subsequently control up to 8 EGM golf ball dispensing machines.</p>
+
+<p>The Netbox operates a RESTful API for communication over HTTP.</p>
+
+<p>The Netbox is a physical device that is connected by serial port to EGM dispensers, and secondly, to a hard-wired LAN connection (Ethernet). The device automatically detects on-line ball dispensers, polling them for their status, and makes this information available via it’s HTTP-driven interface on the LAN connection.</p>
+
+<p>It is the responsibility of the third party (software provider) to check the status of the EGM ball dispensers by using the endpoints below; in particular, <a href="#controller-status">Controller Status</a> and <a href="#authorise-operation">Authorise Operation</a>.</p>
+
+<p>The status of dispensers will usually be <code>idle</code>, indicating that the machine is online and awaiting input. When this status changes to <code>scan</code>, for example, then the third party will be required to process the received card data, and take decisive action by sending an <a href="#authorise-operation">authorise</a> message for the transaction.</p>
+
+<p>To summarize: EGM Netbox will take care of polling ball dispensers, and display any received information, as indicated by this documentation. The third party wishing to integrate shall view this data, extract any relevant parts, and control the ball dispenser by sending appropriate messages to the Netbox.</p>
+
+<p>Further help can be obtained by <a href="mailto:info@rangeball.co.uk">contacting EGM</a>.</p>
+<h1 id='hostname-discovery'>HOSTNAME Discovery</h1>
+<p>On most local networks, the Netbox device is discoverable by its hostname <code>netbox.local</code>.</p>
+
+<p>If you are using a network that does not support DNS then you may opt to discover the device via UDP. The UDP service runs constantly on the device and can be contacted at any time.</p>
+
+<p>To request the IP address of the Netbox via UDP, you should send a UDP broadcast on <code>port 4040</code>. The packet data should contain a single string <code>EGM_NETBOX_DISCOVERY</code>.</p>
+
+<p>Upon sending the broadcast, you should listen for a response from the Netbox which will contain the IP address of the device.</p>
+
+<p>There are a number of popular libraries for most frameworks that may assist in sending and receiving UDP packets.</p>
+<h1 id='api-versioning'>API Versioning</h1>
+<p>This documentation represents <code>v1.0.0</code> of the API. By specifying <code>/api/v1</code> as part of your URL, you will ensure that your integration continues to function regardless of any future upgrades to the interface.</p>
+
+<p>Your URL should be constructed as follows: <code>http://&lt;HOSTNAME&gt;/api/v1/&lt;ENDPOINT&gt;</code>.</p>
+
+<p>See <a href="#hostname-discovery">HOSTNAME Discovery</a> and <a href="#endpoints">Endpoints</a> for further information.</p>
+<h1 id='addressing-controllers'>Addressing Controllers</h1>
+<p>When building endpoint URLs you will notice a variable <code>&lt;ADDRESS&gt;</code> being used. This represents the hostname of IP address of the controller with which you wish to communicate.</p>
+
+<p>Please note that you must include the port number of the Netbox service within the URL of your requests. For most devices the default port will be <code>8080</code>.</p>
+
+<p>The address is a value between <code>1</code> and <code>8</code>. In some cases you can specify <code>all</code> to broadcast to every controller, this option is highlighted when available.</p>
+<h1 id='endpoints'>Endpoints</h1><h2 id='controller-status'>Controller Status</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"eprom_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"03.21"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"special_rate"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"card_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"magnetic"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"cost"</span><span class="p">:</span><span class="w"> </span><span class="mi">480</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"cash_credit"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"card_data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BAW02004"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"basket_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="s2">"controller_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"single-ball"</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dispensing"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"eprom_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"03.21"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="s2">"controller_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"single-ball"</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"idle"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"eprom_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"03.21"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="s2">"controller_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"single-ball"</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"idle"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"eprom_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"03.21"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="s2">"controller_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tipper"</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p>Retrieve a list of all online controllers and their current status.</p>
+<h3 id='http-request'>HTTP Request</h3>
+<p><code>GET /controllers</code></p>
+<h3 id='controller-properties'>Controller Properties</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>address</td>
+<td><code>Integer</code></td>
+<td>This indicates the address of the controller and is expected to be between <code>1</code> and <code>8</code>.</td>
+</tr>
+<tr>
+<td>data</td>
+<td><code>Object</code></td>
+<td>Populated during <code>scan</code>, see <a href="#controller-data">Controller Data</a>.</td>
+</tr>
+<tr>
+<td>controller_type</td>
+<td><code>String</code></td>
+<td>Specifies the type of controller either <code>single-ball</code> or <code>tipper</code>.</td>
+</tr>
+<tr>
+<td>eprom_version</td>
+<td><code>String</code></td>
+<td>Firmware version of controller chipset.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><code>String</code></td>
+<td><code>idle</code> - The controller is online and awaiting user input.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>scan</code> - A user has scanned a card and controller is awaiting a response.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>dispensing</code> -Controller is currently dispensing balls.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>setup_mode</code> - Controller is in SETUP mode.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>engineer_mode</code> - Controller is in ENGINEER mode.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>log_updated</code> - Activity logs have been updated since last read.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>test_mode</code> - Controller is in TEST mode.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>out_of_order</code> - Error present on controller.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>change_hopper_empty</code> - Controller&#39;s change hopper is empty.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>keypad_entry</code> - TODO</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>ball_hopper_low</code> - Controller&#39;s ball hopper is low.</td>
+</tr>
+</tbody></table>
+<h3 id='controller-data'>Controller Data</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>special_rate</td>
+<td><code>Boolean</code></td>
+<td>Whether special rate is selected at controller.</td>
+</tr>
+<tr>
+<td>card_type</td>
+<td><code>String</code></td>
+<td>The type of card that has been read, either <code>magnetic</code> or <code>barcode</code>.</td>
+</tr>
+<tr>
+<td>cycles</td>
+<td><code>String</code></td>
+<td>Delivery cycles for selected size.</td>
+</tr>
+<tr>
+<td>cost</td>
+<td><code>String</code></td>
+<td>Cost of selected size.</td>
+</tr>
+<tr>
+<td>cash_credit</td>
+<td><code>String</code></td>
+<td>Amount of cash credit at controller.</td>
+</tr>
+<tr>
+<td>card_data</td>
+<td><code>String</code></td>
+<td>Data read from card scan, this represents the card identifier.</td>
+</tr>
+<tr>
+<td>basket_size</td>
+<td><code>String</code></td>
+<td>Selected basket size at controller.</td>
+</tr>
+</tbody></table>
+<h2 id='authorise-operation'>Authorise Operation</h2>
+<blockquote>
+<p>To dispense balls and display details of the transaction on controller:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/authorise"</span>
+  -X POST
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d <span class="s1">'{
+        "authorise": {
+          "cycles": 50,
+          "name": "Joe Bloggs",
+          "cost": "3.50",
+          "balance: "16.50",
+          "transfer_credit": 0,
+          "log_voucher": 0
+        }
+      }'</span>
+</code></pre>
+<blockquote>
+<p>To tell user they need to top up with custom message:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/authorise"</span>
+  -X POST
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d <span class="s1">'{
+        "authorise": {
+          "cycles": 0,
+          "message": "There is not enough credit available\nPlease top up!",
+          "transfer_credit": 0,
+          "log_voucher": 0
+        }
+      }'</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="s2">"ok"</span><span class="w">
+</span></code></pre>
+<p>Acknowledge card/voucher operation and authorise action at the controller.</p>
+
+<aside class="warning">If an authrorise response is not received within 60 seconds of a card read, the controller will assume the server is offline and return to Home Screen.</aside>
+<h3 id='http-request-2'>HTTP Request</h3>
+<p><code>POST /controllers/&lt;ADDRESS&gt;/authorise</code></p>
+<h3 id='post-data'>POST Data</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>cycles</td>
+<td><code>Integer</code></td>
+<td>Number of delivery cycles. Send <code>0</code> if no balls should be dispensed.</td>
+</tr>
+<tr>
+<td>transfer_credit</td>
+<td><code>Boolean</code></td>
+<td>Set <code>true</code> to deduct cash top-up value from cash-credit store.</td>
+</tr>
+<tr>
+<td>log_voucher</td>
+<td><code>Boolean</code></td>
+<td>Set <code>true</code> to log delivery as voucher.</td>
+</tr>
+<tr>
+<td>message</td>
+<td><code>String</code></td>
+<td>(Optional) ASCII message to display at controller, use <code>\n</code> for new line.</td>
+</tr>
+<tr>
+<td>name</td>
+<td><code>String</code></td>
+<td>(Optional) The name of the card owner.</td>
+</tr>
+<tr>
+<td>cost</td>
+<td><code>String</code></td>
+<td>(Optional) Cost of the transaction.</td>
+</tr>
+<tr>
+<td>balance</td>
+<td><code>String</code></td>
+<td>(Optional) Remaining balance on card owner&#39;s account.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">You are expected to pass <strong>either</strong> a <code>message</code> to display at the machine <strong>or alternatively</strong> each of <code>name</code>, <code>cost</code> & <code>balance</code> and a default message will be displayed.</aside>
+<h2 id='set-offline'>Set Offline</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1"</span>
+  -X DELETE
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="s2">"ok"</span><span class="w">
+</span></code></pre>
+<p>Set the controller status to &quot;NOT IN USE&quot;, displaying a temporary message on the controller.</p>
+<h3 id='http-request-3'>HTTP Request</h3>
+<p><code>DELETE /controllers/&lt;ADDRESS&gt;</code></p>
+
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
+<h2 id='set-online'>Set Online</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1"</span>
+  -X POST
+  -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="s2">"ok"</span><span class="w">
+</span></code></pre>
+<p>Set the controller status to &quot;IN USE&quot;.</p>
+<h3 id='http-request-4'>HTTP Request</h3>
+<p><code>POST /controllers/&lt;ADDRESS&gt;</code></p>
+
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
+<h2 id='read-calendar'>Read Calendar</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/calendar"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="s2">"17"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"month"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"day_of_month"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"hour"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"minute"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"second"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"day_of_week"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Read the current date/time set on the controller&#39;s calendar.</p>
+<h3 id='http-request-5'>HTTP Request</h3>
+<p><code>GET /controllers/&lt;ADDRESS&gt;/calendar</code></p>
+<h3 id='day-of-week'>Day of Week</h3>
+<table><thead>
+<tr>
+<th>Value</th>
+<th>Day of Week</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>01</code></td>
+<td>Sunday</td>
+</tr>
+<tr>
+<td><code>02</code></td>
+<td>Monday</td>
+</tr>
+<tr>
+<td><code>03</code></td>
+<td>Tuesday</td>
+</tr>
+<tr>
+<td><code>04</code></td>
+<td>Wednesday</td>
+</tr>
+<tr>
+<td><code>05</code></td>
+<td>Thursday</td>
+</tr>
+<tr>
+<td><code>06</code></td>
+<td>Friday</td>
+</tr>
+<tr>
+<td><code>07</code></td>
+<td>Saturday</td>
+</tr>
+</tbody></table>
+<h2 id='set-calendar'>Set Calendar</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/calendar"</span>
+  -X POST
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d <span class="s1">'{
+        "calendar": {
+          "year": "17",
+          "month": "12",
+          "day_of_month": "02",
+          "hour": "12",
+          "minute": "00",
+          "second": "00",
+          "day_of_week": "02"
+        }
+      }'</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="s2">"ok"</span><span class="w">
+</span></code></pre>
+<p>Set the date/time set on the controller&#39;s calendar.</p>
+<h3 id='http-request-6'>HTTP Request</h3>
+<p><code>POST /controllers/&lt;ADDRESS&gt;/calendar</code></p>
+
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
+<h3 id='post-data-2'>POST Data</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>year</td>
+<td><code>String</code></td>
+<td>2 character format, e.g. <code>18</code> for 2018</td>
+</tr>
+<tr>
+<td>month</td>
+<td><code>String</code></td>
+<td>2 character format, e.g. <code>02</code> for February</td>
+</tr>
+<tr>
+<td>day_of_month</td>
+<td><code>String</code></td>
+<td>2 character format, e.g. <code>15</code></td>
+</tr>
+<tr>
+<td>hour</td>
+<td><code>String</code></td>
+<td>2 character format for 24 hour clock, e.g. <code>13</code></td>
+</tr>
+<tr>
+<td>minute</td>
+<td><code>String</code></td>
+<td>2 character format, e.g. <code>30</code></td>
+</tr>
+<tr>
+<td>second</td>
+<td><code>String</code></td>
+<td>2 character format, e.g. <code>00</code></td>
+</tr>
+<tr>
+<td>day_of_week</td>
+<td><code>String</code></td>
+<td><code>01</code> - Sunday</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>02</code> - Monday</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>03</code> - Tuesday</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>04</code> - Wednesday</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>05</code> - Thursday</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>06</code> - Friday</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>07</code> - Saturday</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">Note that after setting the calendar, the controller will temporarily go offline to recalibrate its logs.</aside>
+<h2 id='read-rates'>Read Rates</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/rates"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"sizes_available"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"rates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"special"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"token_1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"token_2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"token_3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"token_4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"ccr"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"baskets"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"basket_1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="s2">"basket_2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">240</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"basket_3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">310</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"basket_4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">360</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"aux"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"normal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"token_1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"token_2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"token_3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"token_4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"ccr"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"baskets"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"basket_1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="s2">"basket_2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">480</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"basket_3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">620</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"basket_4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">720</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"aux"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Read the current rates set on the controller.</p>
+<h3 id='http-request-7'>HTTP Request</h3>
+<p><code>GET /controllers/&lt;ADDRESS&gt;/rates</code></p>
+<h3 id='response-data'>Response Data</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sizes_available</td>
+<td><code>Integer</code></td>
+<td>Number of basket sizes available on controller.</td>
+</tr>
+<tr>
+<td>cycles</td>
+<td><code>Integer</code></td>
+<td>Size of currently described rate.</td>
+</tr>
+<tr>
+<td>price</td>
+<td><code>Integer</code></td>
+<td>Price in pence of currently described rate.</td>
+</tr>
+</tbody></table>
+<h2 id='set-rates'>Set Rates</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/rates"</span>
+  -X POST
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d <span class="s1">'{
+        "rates": {
+          "sizes_available": 4,
+          "rates": {
+            "special": {
+              "token_1": {
+                "cycles": 50
+              },
+              "token_2": {
+                "cycles": 100
+              },
+              "token_3": {
+                "cycles": 150
+              },
+              "token_4": {
+                "cycles": 200
+              },
+              "ccr": {
+                "cycles": 20
+              },
+              "baskets": {
+                "basket_1": {
+                  "cycles": 25,
+                  "price": 150
+                }
+                "basket_2": {
+                  "cycles": 50,
+                  "price": 240
+                },
+                "basket_3": {
+                  "cycles": 75,
+                  "price": 310
+                },
+                "basket_4": {
+                  "cycles": 100,
+                  "price": 360
+                },
+              },
+              "aux": {
+                "cycles": 50
+              }
+            },
+            "normal": {
+              "token_1": {
+                "cycles": 25
+              },
+              "token_2": {
+                "cycles": 50
+              },
+              "token_3": {
+                "cycles": 75
+              },
+              "token_4": {
+                "cycles": 100
+              },
+              "ccr": {
+                "cycles": 10
+              },
+              "baskets": {
+                "basket_1": {
+                  "cycles": 25,
+                  "price": 300
+                }
+                "basket_2": {
+                  "cycles": 50,
+                  "price": 480
+                },
+                "basket_3": {
+                  "cycles": 75,
+                  "price": 620
+                },
+                "basket_4": {
+                  "cycles": 100,
+                  "price": 720
+                },
+              },
+              "aux": {
+                "cycles": 25
+              }
+            }
+          }
+        }
+      }'</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="s2">"ok"</span><span class="w">
+</span></code></pre>
+<p>Set the rates on the controller.</p>
+<h3 id='http-request-8'>HTTP Request</h3>
+<p><code>POST /controllers/&lt;ADDRESS&gt;/rates</code></p>
+
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
+<h3 id='post-data-3'>POST Data</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sizes_available</td>
+<td><code>Integer</code></td>
+<td>Number of basket sizes available on controller.</td>
+</tr>
+<tr>
+<td>cycles</td>
+<td><code>Integer</code></td>
+<td>Size of currently described rate.</td>
+</tr>
+<tr>
+<td>price</td>
+<td><code>Integer</code></td>
+<td>Price in pence of currently described rate.</td>
+</tr>
+</tbody></table>
+<h2 id='set-rate-mode'>Set Rate Mode</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/rate-mode"</span>
+  -X POST
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d <span class="s1">'{
+        "rate_mode": {
+          "mode": "schedule",
+          "sunday": {
+            start: "1000",
+            end: "1400"
+          },
+          "monday": {
+            start: "1200",
+            end: "1400"
+          },
+          "tuesday": {
+            start: "1200",
+            end: "1400"
+          },
+          "wednesday": {
+            start: "1200",
+            end: "1400"
+          },
+          "thursday": {
+            start: "1200",
+            end: "1400"
+          },
+          "friday": {
+            start: "1200",
+            end: "1400"
+          },
+          "saturday": {
+            start: "1200",
+            end: "1400"
+          }
+        }
+      }'</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="s2">"ok"</span><span class="w">
+</span></code></pre>
+<p>Set the rate mode on the controller.</p>
+<h3 id='http-request-9'>HTTP Request</h3>
+<p><code>POST /controllers/&lt;ADDRESS&gt;/rate-mode</code></p>
+
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
+<h3 id='post-data-4'>POST Data</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>mode</td>
+<td><code>String</code></td>
+<td><code>schedule</code> - Set rate mode automatically according to schedule.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>manual</code> - Override schedule and enable special rate mode.</td>
+</tr>
+<tr>
+<td>start</td>
+<td><code>String</code></td>
+<td>Time to start special rate mode in 24-hour format.</td>
+</tr>
+<tr>
+<td>end</td>
+<td><code>String</code></td>
+<td>Time to end special rate mode in 24-hour format.</td>
+</tr>
+</tbody></table>
+
+<aside class="warning">Start and end times for each day must always be specified regardless of <code>mode</code>.</aside>
+<h2 id='display-message'>Display Message</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/display"</span>
+  -X POST
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d <span class="s1">'{
+        "display": {
+          "duration": 60,
+          "text": "Special rates available until 12:00"
+        }
+      }'</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="s2">"ok"</span><span class="w">
+</span></code></pre>
+<p>Set a message to be displayed on the controller for a given period.</p>
+<h3 id='http-request-10'>HTTP Request</h3>
+<p><code>POST /controllers/&lt;ADDRESS&gt;/display</code></p>
+
+<aside class="success">ADDRESS can be set to <code>all</code> to affect all online controllers.</aside>
+<h3 id='post-data-5'>POST Data</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>duration</td>
+<td><code>Integer</code></td>
+<td>Number of minutes to display message, must be between <code>1</code> and <code>60</code></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Set to <code>99</code> to display message indefinitely.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Set to <code>0</code> to clear previously set message.</td>
+</tr>
+<tr>
+<td>text</td>
+<td><code>String</code></td>
+<td>ASCII message to be displayed, use <code>\n</code> for new line</td>
+</tr>
+</tbody></table>
+<h2 id='read-activity-logs'>Read Activity Logs</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://192.168.0.1:8080/api/v1/controllers/1/activity?day_of_month=4&amp;month=11&amp;year=17&amp;hour=12"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"day"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"month"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"hour"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"top_up_cash"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"token_1_collected"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"token_2_collected"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"token_3_collected"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"token_4_collected"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"test_mode_cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"test_mode_change"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"test_mode_cash"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"slave_mode_cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"keypad_cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"change_given"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ccr_2_operations"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"cash_collected"</span><span class="p">:</span><span class="w"> </span><span class="mi">1650</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"card_cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"basket_1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"dispensed"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cash"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"basket_2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"dispensed"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cash"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"basket_3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"dispensed"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cash"</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"basket_4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"dispensed"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cycles"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cash"</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"aux_operations"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Read activity logs from controller for a given hour.</p>
+<h3 id='http-request-11'>HTTP Request</h3>
+<p><code>GET /controllers/&lt;ADDRESS&gt;/activity</code></p>
+<h3 id='query-parameters'>QUERY Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>day</td>
+<td><code>Integer</code></td>
+<td>Defaults to current day.</td>
+</tr>
+<tr>
+<td>month</td>
+<td><code>Integer</code></td>
+<td>Defaults to current month.</td>
+</tr>
+<tr>
+<td>year</td>
+<td><code>Integer</code></td>
+<td>Defaults to current year.</td>
+</tr>
+<tr>
+<td>hour</td>
+<td><code>Integer</code></td>
+<td>24-hour format, defaults to current hour.</td>
+</tr>
+</tbody></table>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="shell">curl</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
